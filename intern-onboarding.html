@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docere — Intern Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; overflow: hidden; }
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  /* — Slide base — */
+  .slide { width: 100vw; height: 100vh; display: none; flex-direction: column; justify-content: center; padding: 7vh 8vw; position: absolute; top: 0; left: 0; }
+  .slide.active { display: flex; }
+
+  /* — Theme variants — */
+  .slide.light { background: #ffffff; color: #1a1a1a; }
+  .slide.light h1, .slide.light h2 { color: #1a1a1a; }
+  .slide.light p { color: #444; }
+  .slide.light .card { background: #f7f7f4; border: 1px solid #e5e5e0; }
+  .slide.light .card h4 { color: #1a1a1a; }
+  .slide.light .card p { color: #666; }
+  .slide.light .dim { color: #999; }
+
+  .slide.dark { background: #1a1a18; color: #e8e8e8; }
+  .slide.dark h1, .slide.dark h2 { color: #fff; }
+  .slide.dark p { color: #b0b0b0; }
+  .slide.dark .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+  .slide.dark .card h4 { color: #fff; }
+  .slide.dark .card p { color: #999; }
+  .slide.dark .dim { color: #555; }
+
+  .slide.orange { background: #F15524; color: #fff; }
+  .slide.orange h1, .slide.orange h2, .slide.orange p { color: #fff; }
+
+  .slide.light-orange { background: #FDE8E0; color: #1a1a1a; }
+  .slide.light-orange h1, .slide.light-orange h2 { color: #1a1a1a; }
+  .slide.light-orange p { color: #444; }
+  .slide.light-orange .card { background: #fff; border: 1px solid rgba(241,85,36,0.15); }
+  .slide.light-orange .card h4 { color: #1a1a1a; }
+  .slide.light-orange .card p { color: #555; }
+
+  /* — Typography — */
+  h1 { font-family: 'EB Garamond', Georgia, serif; font-size: 3rem; font-weight: 400; margin-bottom: 1.2rem; line-height: 1.15; }
+  h2 { font-family: 'EB Garamond', Georgia, serif; font-size: 2.2rem; font-weight: 400; margin-bottom: 1.5rem; line-height: 1.2; }
+  h3 { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.18em; color: #F15524; margin-bottom: 1.2rem; }
+  h4 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+  p { font-size: 1.05rem; line-height: 1.7; max-width: 720px; margin-bottom: 0.6rem; }
+  li { font-size: 1rem; line-height: 1.7; color: #555; }
+  .slide.dark li { color: #b0b0b0; }
+  .accent { color: #F15524; }
+
+  /* — Grids — */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.75rem; margin-top: 1rem; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; margin-top: 1rem; }
+
+  /* — Cards — */
+  .card { border-radius: 14px; padding: 1.6rem; }
+  .card-top { border-top: 3px solid #F15524; }
+
+  /* — Tags — */
+  .tag { display: inline-block; font-size: 0.8rem; padding: 0.2rem 0.7rem; border-radius: 20px; background: rgba(241,85,36,0.1); color: #F15524; border: 1px solid rgba(241,85,36,0.2); margin-right: 0.4rem; margin-bottom: 0.4rem; font-weight: 500; }
+  .tag-dark { background: rgba(255,255,255,0.07); color: #ccc; border: 1px solid rgba(255,255,255,0.12); }
+
+  /* — Flow diagram — */
+  .flow { display: flex; align-items: center; gap: 0.6rem; margin: 1.5rem 0; flex-wrap: wrap; }
+  .flow-step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.1rem 1.3rem; text-align: center; min-width: 130px; flex: 1; }
+  .slide.light .flow-step { background: #f7f7f4; border: 1px solid #e5e5e0; }
+  .slide.light-orange .flow-step { background: #fff; border: 1px solid rgba(241,85,36,0.15); }
+  .flow-step .fnum { font-size: 0.8rem; font-weight: 600; color: #F15524; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+  .flow-step .ftitle { font-size: 0.95rem; font-weight: 600; color: inherit; margin-bottom: 0.2rem; }
+  .flow-step .fdesc { font-size: 0.85rem; color: #999; }
+  .slide.light .flow-step .fdesc { color: #888; }
+  .flow-arrow { color: #F15524; font-size: 1.3rem; }
+
+  /* — Stat bar — */
+  .stat-bar { display: flex; gap: 2rem; margin-top: 1.75rem; font-size: 0.92rem; color: #888; flex-wrap: wrap; }
+  .stat-bar span { display: flex; align-items: center; gap: 0.4rem; }
+  .stat-bar .dot { width: 6px; height: 6px; border-radius: 50%; background: #F15524; flex-shrink: 0; }
+
+  /* — Callout — */
+  .callout { background: rgba(241,85,36,0.06); border-left: 3px solid #F15524; border-radius: 0 10px 10px 0; padding: 1.1rem 1.4rem; margin-top: 1.4rem; }
+  .slide.dark .callout { background: rgba(241,85,36,0.08); }
+  .callout p { margin: 0; font-size: 1rem; color: #666; }
+  .slide.dark .callout p { color: #ccc; }
+
+  /* — Role badge — */
+  .role-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(241,85,36,0.1); border: 1px solid rgba(241,85,36,0.2); border-radius: 8px; padding: 0.3rem 0.85rem; font-size: 0.82rem; font-weight: 600; color: #F15524; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+
+  /* — Access row — */
+  .access-row { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); margin-bottom: 0.65rem; }
+  .slide.light .access-row { background: #f7f7f4; border: 1px solid #e5e5e0; }
+  .access-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .access-row h4 { margin-bottom: 0.1rem; font-size: 0.98rem; }
+  .access-row p { margin: 0; font-size: 0.88rem; color: #888; }
+  .slide.light .access-row p { color: #999; }
+
+  /* — Checklist — */
+  .checklist { list-style: none; margin-top: 0.75rem; }
+  .checklist li { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.45rem 0; font-size: 0.98rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .slide.light .checklist li { border-bottom: 1px solid #f0f0ec; }
+  .checklist li:last-child { border-bottom: none; }
+  .check { color: #F15524; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+
+  /* — Progress bar — */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: #F15524; transition: width 0.4s ease; z-index: 200; }
+
+  /* — Navigation — */
+  .counter { position: fixed; bottom: 2rem; left: 3rem; font-size: 0.78rem; color: #bbb; z-index: 100; }
+  .nav { position: fixed; bottom: 1.7rem; right: 3rem; display: flex; gap: 0.6rem; z-index: 100; }
+  .nav button { background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.2); color: #999; width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .nav button:hover { background: rgba(241,85,36,0.15); color: #F15524; border-color: rgba(241,85,36,0.3); }
+
+  /* — Animations — */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .slide.active > * { animation: fadeIn 0.4s ease-out both; }
+  .slide.active > *:nth-child(2) { animation-delay: 0.07s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.14s; }
+  .slide.active > *:nth-child(4) { animation-delay: 0.20s; }
+  .slide.active > *:nth-child(5) { animation-delay: 0.26s; }
+  .slide.active > *:nth-child(6) { animation-delay: 0.32s; }
+  .slide.active > *:nth-child(7) { animation-delay: 0.38s; }
+
+  /* — Print — */
+  @media print {
+    .slide { display: flex !important; position: relative !important; height: auto; min-height: 100vh; page-break-after: always; }
+    .nav, .counter, #progress { display: none !important; }
+    body { overflow: visible; }
+    .deck { height: auto; }
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="deck">
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 1: Welcome                      -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark active">
+  <svg style="width:72px;height:72px;margin-bottom:1.25rem;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><ellipse id="p" cx="100" cy="100" rx="90" ry="22"/></defs><g fill="#F15524"><use href="#p" transform="rotate(0 100 100)"/><use href="#p" transform="rotate(45 100 100)"/><use href="#p" transform="rotate(90 100 100)"/><use href="#p" transform="rotate(135 100 100)"/></g></svg>
+  <h3>Welcome</h3>
+  <h1>Glad you're here.</h1>
+  <p style="font-size:1.2rem;color:#888;font-family:'EB Garamond',Georgia,serif;max-width:580px;">This is your first look at Docere — what we're building, where we're headed, and how you fit in.</p>
+  <div class="stat-bar">
+    <span><span class="dot"></span> Youdahe Asfaw, Founder</span>
+    <span><span class="dot"></span> Spring / Summer 2026</span>
+    <span><span class="dot"></span> Intern Onboarding</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 2: Agenda                       -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light">
+  <h3>Today's Agenda</h3>
+  <h2>What we'll cover</h2>
+  <div class="grid2" style="max-width:820px;">
+    <div class="card card-top">
+      <h4>01 &nbsp;—&nbsp; Docere</h4>
+      <p>What we're building and the problem we're solving in K–12 education.</p>
+    </div>
+    <div class="card card-top">
+      <h4>02 &nbsp;—&nbsp; How It Works</h4>
+      <p>A quick tour of the platform — frontend, backend, AI layer.</p>
+    </div>
+    <div class="card card-top">
+      <h4>03 &nbsp;—&nbsp; Where We Are</h4>
+      <p>Current traction, live deployments, and what's being built right now.</p>
+    </div>
+    <div class="card card-top">
+      <h4>04 &nbsp;—&nbsp; Your Role</h4>
+      <p>What frontend, backend, and research interns own this semester.</p>
+    </div>
+    <div class="card card-top">
+      <h4>05 &nbsp;—&nbsp; Access & Tools</h4>
+      <p>Every account, invite, and repo you'll need from day one.</p>
+    </div>
+    <div class="card card-top">
+      <h4>06 &nbsp;—&nbsp; Getting Started</h4>
+      <p>First-week checklist and how we work as a team.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 3: What Is Docere               -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark">
+  <h3>The Problem</h3>
+  <h1>Students get lost.<br>Teachers are overwhelmed.</h1>
+  <p style="max-width:640px;">In most K–12 classrooms, a single teacher manages 30+ students with wildly different needs — and there's no scalable way to give each student the personalized guidance they deserve.</p>
+  <div class="grid3" style="margin-top:1.5rem;">
+    <div class="card">
+      <h4 style="color:#F15524;">30:1</h4>
+      <p>Average student-to-teacher ratio in US public schools.</p>
+    </div>
+    <div class="card">
+      <h4 style="color:#F15524;">58%</h4>
+      <p>Of teachers say they don't have time to address individual learning gaps.</p>
+    </div>
+    <div class="card">
+      <h4 style="color:#F15524;">2×</h4>
+      <p>Learning gains shown with one-on-one tutoring vs. traditional classroom instruction.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 4: Our Solution                 -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide orange">
+  <h3>The Solution</h3>
+  <h1>Docere is the AI tutor<br>for every student.</h1>
+  <p style="font-size:1.2rem;max-width:640px;color:rgba(255,255,255,0.88);">We plug into a school's existing LMS (Moodle, Canvas) and give every student a personal AI tutor that knows their coursework, tracks their progress, and helps them when they're stuck — at any hour.</p>
+  <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+    <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);">LMS-Integrated</span>
+    <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);">Real-time Tutoring</span>
+    <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);">Gradebook Sync</span>
+    <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);">Instructor Dashboard</span>
+    <span class="tag" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.25);">Session Notes</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 5: How It Works                 -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light">
+  <h3>Platform Overview</h3>
+  <h2>How Docere works</h2>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="fnum">01</div>
+      <div class="ftitle">School connects LMS</div>
+      <div class="fdesc">Moodle / Canvas syncs courses, students, roster</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="fnum">02</div>
+      <div class="ftitle">Student opens Docere</div>
+      <div class="fdesc">Logs in via SSO; sees their courses & AI tutor</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="fnum">03</div>
+      <div class="ftitle">AI tutoring session</div>
+      <div class="fdesc">LangGraph agent answers Qs, scores responses, builds notes</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="fnum">04</div>
+      <div class="ftitle">Instructor reviews</div>
+      <div class="fdesc">Dashboard shows session summaries, gradebook, gaps</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="fnum">05</div>
+      <div class="ftitle">Grades sync back</div>
+      <div class="fdesc">Scores pushed back to LMS gradebook automatically</div>
+    </div>
+  </div>
+  <div class="callout">
+    <p>The AI agent is built on <strong>LangGraph</strong> with Claude as the backbone. It maintains session state, detects misconceptions, and generates structured notes after each session.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 6: Where We Are                 -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light-orange">
+  <h3>Traction</h3>
+  <h2>Where we are today</h2>
+  <div class="grid4">
+    <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+      <div style="font-size:2.8rem;font-weight:700;color:#F15524;line-height:1;margin-bottom:0.3rem;">500+</div>
+      <div style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;color:#888;">Active Students</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+      <div style="font-size:2.8rem;font-weight:700;color:#F15524;line-height:1;margin-bottom:0.3rem;">2</div>
+      <div style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;color:#888;">Schools Live (MN)</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+      <div style="font-size:2.8rem;font-weight:700;color:#F15524;line-height:1;margin-bottom:0.3rem;">$10K</div>
+      <div style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;color:#888;">In Prizes Won</div>
+    </div>
+    <div class="card" style="text-align:center;padding:1.5rem 1rem;">
+      <div style="font-size:2.8rem;font-weight:700;color:#F15524;line-height:1;margin-bottom:0.3rem;">v2</div>
+      <div style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;color:#888;">Full Rebuild Underway</div>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;color:#555;max-width:700px;">We are <strong>live right now</strong> in a Minnesota middle school. This summer we're expanding to a second school — you'll be building and maintaining the infrastructure that supports real students, in real time. <strong>You're joining at the right moment.</strong></p>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 7: The Team                     -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light">
+  <h3>The Team</h3>
+  <h2>Who you'll be working with</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-top:1rem;max-width:1000px;">
+    <div class="card card-top">
+      <h4>Youdahe Asfaw</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Founder</p>
+      <p style="font-size:0.9rem;">Full-stack, AI, product direction. Main point of contact.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Backend</span><span class="tag">AI</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Kofi Osei</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Co-founder</p>
+      <p style="font-size:0.9rem;">Strategy, partnerships, and school relationships.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Ops</span><span class="tag">BD</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Kevin Thai</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Frontend Intern</p>
+      <p style="font-size:0.9rem;">Student-facing UI and component library.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">React</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Christie</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Frontend Intern</p>
+      <p style="font-size:0.9rem;">Instructor dashboard and gradebook interface.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">React</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Joshua Ekoja</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Backend Intern</p>
+      <p style="font-size:0.9rem;">API development, LMS integration, infrastructure.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Backend</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Noah Moore</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Backend Intern</p>
+      <p style="font-size:0.9rem;">Agent pipeline, database, and deployment.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Backend</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Jayviont</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Backend Intern</p>
+      <p style="font-size:0.9rem;">Backend systems, API routes, and infra support.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Backend</span></div>
+    </div>
+    <div class="card card-top">
+      <h4>Luke</h4>
+      <p style="font-size:0.88rem;color:#999;margin-bottom:0.6rem;">Research Intern</p>
+      <p style="font-size:0.9rem;">Market research, learning science, competitive landscape.</p>
+      <div style="margin-top:0.6rem;"><span class="tag">Research</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 8: Frontend Interns             -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark">
+  <div class="role-badge" style="background:rgba(241,85,36,0.15);border-color:rgba(241,85,36,0.3);">Frontend</div>
+  <h2>What frontend interns own</h2>
+  <div class="grid2">
+    <div>
+      <p style="color:#ccc;margin-bottom:1rem;">You'll work in <strong style="color:#fff;">React + TypeScript</strong> inside the <code style="background:rgba(255,255,255,0.07);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.9rem;">/frontend</code> directory. Vite handles the dev server. We use Tailwind for styling and Tiptap for rich text.</p>
+      <ul class="checklist">
+        <li><span class="check">→</span> Student tutoring chat interface & session UX</li>
+        <li><span class="check">→</span> Instructor dashboard — sessions, gradebook, student overview</li>
+        <li><span class="check">→</span> Notes viewer & editing (Tiptap integration)</li>
+        <li><span class="check">→</span> LLM response streaming UI</li>
+        <li><span class="check">→</span> Responsive design across tablet & desktop</li>
+        <li><span class="check">→</span> API integration with FastAPI backend</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h4>Stack</h4>
+        <div style="margin-top:0.5rem;"><span class="tag">React 18</span><span class="tag">TypeScript</span><span class="tag">Vite</span><span class="tag">Tailwind</span><span class="tag">Tiptap</span></div>
+      </div>
+      <div class="card">
+        <h4>How we ship</h4>
+        <p>Branch off <code style="font-size:0.88rem;background:rgba(255,255,255,0.07);padding:0.1rem 0.35rem;border-radius:4px;">main</code>, open a PR, get a review. We keep PRs small and focused. No force-pushes to main.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 9: Backend Interns              -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark">
+  <div class="role-badge" style="background:rgba(241,85,36,0.15);border-color:rgba(241,85,36,0.3);">Backend</div>
+  <h2>What backend interns own</h2>
+  <div class="grid2">
+    <div>
+      <p style="color:#ccc;margin-bottom:1rem;">You'll work in <strong style="color:#fff;">Python + FastAPI</strong> inside the <code style="background:rgba(255,255,255,0.07);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.9rem;">/backend</code> directory. We are live in a school <em>right now</em> — and expanding to a second school this summer. A big part of your role is <strong style="color:#fff;">maintaining production infrastructure</strong> so real students stay online.</p>
+      <ul class="checklist">
+        <li><span class="check">→</span> FastAPI routes — tutoring, gradebook, sessions, auth</li>
+        <li><span class="check">→</span> LangGraph agent improvements & prompt tuning</li>
+        <li><span class="check">→</span> Moodle / Canvas LMS integration & sync</li>
+        <li><span class="check">→</span> Google Sheets gradebook export</li>
+        <li><span class="check">→</span> Database schema (SQLAlchemy + SQLite → Postgres)</li>
+        <li><span class="check">→</span> Infra stability — uptime, monitoring, second school rollout</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h4>Stack</h4>
+        <div style="margin-top:0.5rem;"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">LangGraph</span><span class="tag">Claude API</span><span class="tag">SQLAlchemy</span></div>
+      </div>
+      <div class="card">
+        <h4>Key pattern</h4>
+        <p>LLM responses wrap structured data in <code style="font-size:0.88rem;background:rgba(255,255,255,0.07);padding:0.1rem 0.35rem;border-radius:4px;">```artifact</code> blocks. Backend parses these with regex. Learn this early.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 10: Research Interns            -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark">
+  <div class="role-badge" style="background:rgba(241,85,36,0.15);border-color:rgba(241,85,36,0.3);">Research</div>
+  <h2>What research interns own</h2>
+  <div class="grid2">
+    <div>
+      <p style="color:#ccc;margin-bottom:1rem;">Research interns sit at the intersection of <strong style="color:#fff;">learning science, market strategy, and product</strong>. Your work directly shapes what we build and how we pitch.</p>
+      <ul class="checklist">
+        <li><span class="check">→</span> EdTech competitive landscape (Khan Academy, Khanmigo, Synthesis, etc.)</li>
+        <li><span class="check">→</span> Learning science validation — does AI tutoring actually work?</li>
+        <li><span class="check">→</span> School & district outreach research — who are the buyers?</li>
+        <li><span class="check">→</span> User research with teachers and students</li>
+        <li><span class="check">→</span> Pitch deck support and investor materials</li>
+        <li><span class="check">→</span> Grant & fellowship opportunity tracking</li>
+      </ul>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h4>Deliverables</h4>
+        <p>Weekly research briefs (1–2 pages). Competitive matrix. User interview summaries. Market sizing.</p>
+      </div>
+      <div class="card">
+        <h4>Where your work lands</h4>
+        <p>Directly into pitch decks, product decisions, and school conversations. You'll present findings to the full team biweekly.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 11: Access & Tools              -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light">
+  <h3>Access & Tools</h3>
+  <h2>Everything you'll need</h2>
+  <div class="grid2" style="max-width:900px;gap:1rem;margin-top:1.25rem;">
+    <div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#4A154B;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>
+        </div>
+        <div>
+          <h4>Slack</h4>
+          <p>Team workspace — daily standups, questions, announcements</p>
+        </div>
+      </div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#1a1a1a;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </div>
+        <div>
+          <h4>GitHub</h4>
+          <p>Main repo: <strong>docere-v2</strong> — all code lives here</p>
+        </div>
+      </div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#0066FF;">
+          <span style="color:white;font-weight:700;font-size:0.75rem;">Lin</span>
+        </div>
+        <div>
+          <h4>Linear</h4>
+          <p>Task tracking — your sprint items, bugs, and feature requests</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#EA4335;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+        </div>
+        <div>
+          <h4>Google Workspace</h4>
+          <p>Shared Drive for docs, research, decks, and notes</p>
+        </div>
+      </div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#F15524;">
+          <svg viewBox="0 0 200 200" width="18" height="18"><defs><ellipse id="p2" cx="100" cy="100" rx="90" ry="22"/></defs><g fill="white"><use href="#p2" transform="rotate(0 100 100)"/><use href="#p2" transform="rotate(45 100 100)"/><use href="#p2" transform="rotate(90 100 100)"/><use href="#p2" transform="rotate(135 100 100)"/></g></svg>
+        </div>
+        <div>
+          <h4>Docere Dev Environment</h4>
+          <p>You'll have accounts on staging — log in as a student or instructor and use the product you're building</p>
+        </div>
+      </div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#0A0A0A;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747-.652-4.506-3.859-8.292-8.208-9.695a12.597 12.597 0 0 0-2.499-.523A33.119 33.119 0 0 0 11.573 0zm4.069 7.217c.347 0 .408.005.486.047a.473.473 0 0 1 .237.277c.018.06.023 1.365.018 4.304l-.006 4.218-.744-1.14-.746-1.14v-3.066c0-1.982.01-3.097.023-3.15a.478.478 0 0 1 .233-.296c.096-.05.13-.054.5-.054z"/></svg>
+        </div>
+        <div>
+          <h4>Vercel / Railway</h4>
+          <p>Deployment previews for frontend PRs; backend staging environment</p>
+        </div>
+      </div>
+      <div class="access-row">
+        <div class="access-icon" style="background:#FF6719;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+        </div>
+        <div>
+          <h4>Substack</h4>
+          <p>We publish regular updates — new features, school news, product progress. You'll be tagged in posts about your work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 12: Algorythm Partnership       -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide dark">
+  <h3>Community & Growth</h3>
+  <h2>Our partnership with <span class="accent">Algorythm</span></h2>
+  <div class="grid2" style="max-width:880px;">
+    <div>
+      <p style="color:#ccc;">We've partnered with <strong style="color:#fff;">Algorythm</strong>, a ~10,000-member engineer community founded by Esco Obong. This gives Docere direct reach into a large network of developers, potential contributors, and future users.</p>
+      <p style="color:#888;margin-top:0.75rem;">As interns, you're part of this network. Show your work — what you build here can open doors.</p>
+      <div class="callout" style="margin-top:1.25rem;">
+        <p>We'll be posting Substack updates regularly — covering new features, school milestones, and intern contributions. Build something worth writing about.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1rem;">
+        <h4>What the partnership means</h4>
+        <ul class="checklist" style="margin-top:0.5rem;">
+          <li><span class="check">→</span> ~10K engineers who can see what we're building</li>
+          <li><span class="check">→</span> Beta testers, future hires, school referrals</li>
+          <li><span class="check">→</span> Community events and exposure for the team</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Substack cadence</h4>
+        <p>Regular updates go out to subscribers — new features, school news, team highlights. Your PRs and research may be featured.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 13: Norms & Expectations        -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light-orange">
+  <h3>How We Work</h3>
+  <h2>Norms & expectations</h2>
+  <div class="grid2" style="max-width:860px;">
+    <div class="card card-top">
+      <h4>Communication</h4>
+      <ul class="checklist">
+        <li><span class="check">→</span> Default async on Slack — respond within 24 hrs</li>
+        <li><span class="check">→</span> Post a quick standup in <strong>#standups</strong> each morning</li>
+        <li><span class="check">→</span> If you're blocked, say so immediately — don't sit on it</li>
+      </ul>
+    </div>
+    <div class="card card-top">
+      <h4>Code</h4>
+      <ul class="checklist">
+        <li><span class="check">→</span> Small, focused PRs — one thing at a time</li>
+        <li><span class="check">→</span> Always branch off main, never push directly</li>
+        <li><span class="check">→</span> Write meaningful commit messages</li>
+      </ul>
+    </div>
+    <div class="card card-top">
+      <h4>Learning</h4>
+      <ul class="checklist">
+        <li><span class="check">→</span> You're expected to grow — ask questions freely</li>
+        <li><span class="check">→</span> Read the README and existing code before asking</li>
+        <li><span class="check">→</span> Document what you learn for the next intern</li>
+      </ul>
+    </div>
+    <div class="card card-top">
+      <h4>Ownership</h4>
+      <ul class="checklist">
+        <li><span class="check">→</span> You own your track — drive it, don't wait to be told</li>
+        <li><span class="check">→</span> Ship working software, not perfect software</li>
+        <li><span class="check">→</span> Real students use this — quality matters</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 13: First Week Checklist        -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide light">
+  <h3>Day One</h3>
+  <h2>Your first-week checklist</h2>
+  <div class="grid2" style="max-width:860px;gap:1.5rem;">
+    <div>
+      <h4 style="margin-bottom:0.75rem;">Setup</h4>
+      <ul class="checklist">
+        <li><span class="check">✓</span> Accept Slack invite, introduce yourself in <strong>#general</strong></li>
+        <li><span class="check">✓</span> Accept GitHub org invite, clone <code style="font-size:0.88rem;background:#f0f0ec;padding:0.1rem 0.35rem;border-radius:4px;">docere-v2</code></li>
+        <li><span class="check">✓</span> Follow the README to run the app locally</li>
+        <li><span class="check">✓</span> Get added to Linear and pick up your first ticket</li>
+        <li><span class="check">✓</span> Join the Google Drive shared folder</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="margin-bottom:0.75rem;">First contributions</h4>
+      <ul class="checklist">
+        <li><span class="check">✓</span> Read through the codebase for your track</li>
+        <li><span class="check">✓</span> Open your first PR by end of week 1</li>
+        <li><span class="check">✓</span> Pair with Youdahe on a walkthrough call</li>
+        <li><span class="check">✓</span> Log what confused you — helps us improve onboarding</li>
+        <li><span class="check">✓</span> Ship something small you're proud of</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <p>The best way to learn the codebase is to <strong>open a PR</strong>. Even a small one. It forces you to understand git flow, tests, and review culture all at once.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- SLIDE 14: Closing                     -->
+<!-- ══════════════════════════════════════ -->
+<div class="slide orange">
+  <svg style="width:64px;height:64px;margin-bottom:1.25rem;opacity:0.9;" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><ellipse id="p3" cx="100" cy="100" rx="90" ry="22"/></defs><g fill="rgba(255,255,255,0.9)"><use href="#p3" transform="rotate(0 100 100)"/><use href="#p3" transform="rotate(45 100 100)"/><use href="#p3" transform="rotate(90 100 100)"/><use href="#p3" transform="rotate(135 100 100)"/></g></svg>
+  <h1 style="font-size:3.5rem;">Let's build something<br>that matters.</h1>
+  <p style="font-size:1.25rem;color:rgba(255,255,255,0.85);max-width:600px;margin-top:0.5rem;">Real students in real classrooms are depending on what we build. Welcome to the team.</p>
+  <div style="margin-top:2rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+    <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:0.75rem 1.25rem;">
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.6);margin-bottom:0.2rem;">Questions?</div>
+      <div style="font-size:0.95rem;font-weight:600;">youdahe@docere.ai</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:0.75rem 1.25rem;">
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.6);margin-bottom:0.2rem;">Slack</div>
+      <div style="font-size:0.95rem;font-weight:600;">docere-team.slack.com</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:10px;padding:0.75rem 1.25rem;">
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.6);margin-bottom:0.2rem;">GitHub</div>
+      <div style="font-size:0.95rem;font-weight:600;">github.com/docere-ai</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.deck -->
+
+<!-- Navigation -->
+<div class="counter"><span id="cur">1</span> / <span id="tot"></span></div>
+<div class="nav">
+  <button id="prev" onclick="move(-1)">←</button>
+  <button id="next" onclick="move(1)">→</button>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let cur = 0;
+
+  document.getElementById('tot').textContent = total;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    document.getElementById('cur').textContent = cur + 1;
+    document.getElementById('progress').style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function move(dir) { show(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); move(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+  });
+
+  // Init progress
+  document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+</body>
+</html>
